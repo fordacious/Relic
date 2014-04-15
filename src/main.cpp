@@ -13,18 +13,26 @@
 typedef char byte;
 
 struct Light {
-	double x = 0;
-	double y = 0;
-	double z = 0;
+    double x = 0;
+    double y = 0;
+    double z = 0;
 
-	double r = 0xff;
-	double g = 0xff;
-	double b = 0xff;
+    double r = 0xff;
+    double g = 0xff;
+    double b = 0xff;
 
-	double intensity = 1;
+    double intensity = 0.1;
 };
 
-Light light;
+Light * selectedLight;
+
+Light * lights   [10];
+float lightPositions  [10*3];
+float lightColours    [10*3];
+float lightIntensities[10];
+float lightFalloffs   [10*3];
+int numLights = 3;
+
 std::map<std::string, GLuint> shaders;
 
 double FPS = 60;
@@ -85,54 +93,66 @@ void loadShader(std::string filename, std::string refname) {
 }
 
 void renderTest() {
-	glLoadIdentity();
+    glLoadIdentity();
 
-	glUseProgram(shaderProgram);
-	glUniform3f(glGetUniformLocation(shaderProgram, "lightPos"), (light.x + 1) * 0.5, (light.y + 1) * 0.5, light.z);
-	glUniform3f(glGetUniformLocation(shaderProgram, "lightCol"), light.r / 0xff, light.g / 0xff, light.b / 0xff);
-	glUniform1f(glGetUniformLocation(shaderProgram, "lightIntensity"), light.intensity);
+    glUseProgram(shaderProgram);
+    glUniform3fv(glGetUniformLocation(shaderProgram, "lightPositions"),   numLights * 3, lightPositions);//(light.x + 1) * 0.5, (light.y + 1) * 0.5, light.z);
+    glUniform3fv(glGetUniformLocation(shaderProgram, "lightColours"),     numLights * 3, lightColours);//light.r / 0xff, light.g / 0xff, light.b / 0xff);
+    glUniform1fv(glGetUniformLocation(shaderProgram, "lightIntensities"), numLights, lightIntensities);// light.intensity);
+    glUniform3fv(glGetUniformLocation(shaderProgram, "lightFalloffs"),    numLights * 3, lightFalloffs);//0,0,0.1);
+    
+    glUniform3f(glGetUniformLocation(shaderProgram, "ambient"), 0.2 / numLights,0.2 / numLights,0.2 / numLights);//0.7,0.7,0.7);
+    glUniform1i(glGetUniformLocation (shaderProgram, "numLights"), numLights);
 
-	glActiveTexture(GL_TEXTURE0 + diffuseHandle);
-	glBindTexture(GL_TEXTURE_2D, diffuseHandle);
-	glUniform1i(glGetUniformLocation(shaderProgram, "diffuseTexture"), diffuseHandle);
+    glActiveTexture(GL_TEXTURE0 + diffuseHandle);
+    glBindTexture(GL_TEXTURE_2D, diffuseHandle);
+    glUniform1i(glGetUniformLocation(shaderProgram, "diffuseTexture"), diffuseHandle);
 
-	glActiveTexture(GL_TEXTURE0 + heightHandle);
-	glBindTexture(GL_TEXTURE_2D, heightHandle);
-	glUniform1i(glGetUniformLocation(shaderProgram, "heightTexture"), heightHandle);
+    glActiveTexture(GL_TEXTURE0 + heightHandle);
+    glBindTexture(GL_TEXTURE_2D, heightHandle);
+    glUniform1i(glGetUniformLocation(shaderProgram, "heightTexture"), heightHandle);
 
-	glActiveTexture(GL_TEXTURE0 + normalHandle);
-	glBindTexture(GL_TEXTURE_2D, normalHandle);
-	glUniform1i(glGetUniformLocation(shaderProgram, "normalTexture"), normalHandle);
+    glActiveTexture(GL_TEXTURE0 + normalHandle);
+    glBindTexture(GL_TEXTURE_2D, normalHandle);
+    glUniform1i(glGetUniformLocation(shaderProgram, "normalTexture"), normalHandle);
 
-	glUniform2f(glGetUniformLocation(shaderProgram, "resolution"), 800, 600);
+    glUniform2f(glGetUniformLocation(shaderProgram, "resolution"), 800, 600);
 
-	glUniform3f(glGetUniformLocation(shaderProgram, "ambient"), 0.7,0.7,0.7);
-	glUniform3f(glGetUniformLocation(shaderProgram, "falloff"), 0,0,0.1);
-
-	//std::cout << light.x << " " << light.y << std::endl;
-
-	glBegin(GL_QUADS);
-		glColor3d(0.5,0.5,0.5);
-
-		glVertex3f(-0.5,-0.5,0);
-		glVertex3f(0.5,-0.5,0);
-		glVertex3f(0.5,0.5,0);
-		glVertex3f(-0.5,0.5,0);
-	glEnd();
-
-	glUseProgram(0);
     glBegin(GL_QUADS);
-		glColor3d(light.r / 0xff, light.g / 0xff, light.b / 0xff);
+        glColor3d(0.5,0.5,0.5);
 
-		glVertex3f(light.x-0.005,light.y-0.005,0);
-		glVertex3f(light.x+0.005,light.y-0.005,0);
-		glVertex3f(light.x+0.005,light.y+0.005,0);
-		glVertex3f(light.x-0.005,light.y+0.005,0);
+        glVertex3f(-0.5,-0.5,0);
+        glVertex3f(0.5,-0.5,0);
+        glVertex3f(0.5,0.5,0);
+        glVertex3f(-0.5,0.5,0);
     glEnd();
+
+    glUseProgram(0);
+    int i = 0;
+    for (i=0;i<numLights;i++) {
+    	glBegin(GL_QUADS);
+            glColor3d(0,0,0);
+
+            glVertex3f(lights[i]->x-0.005 + 0.003,lights[i]->y-0.005 - 0.003,0);
+            glVertex3f(lights[i]->x+0.005 + 0.003,lights[i]->y-0.005 - 0.003,0);
+            glVertex3f(lights[i]->x+0.005 + 0.003,lights[i]->y+0.005 - 0.003,0);
+            glVertex3f(lights[i]->x-0.005 + 0.003,lights[i]->y+0.005 - 0.003,0);
+        glEnd();
+        glBegin(GL_QUADS);
+            glColor3d(lights[i]->r / 0xff, lights[i]->g / 0xff, lights[i]->b / 0xff);
+
+            glVertex3f(lights[i]->x-0.005,lights[i]->y-0.005,0);
+            glVertex3f(lights[i]->x+0.005,lights[i]->y-0.005,0);
+            glVertex3f(lights[i]->x+0.005,lights[i]->y+0.005,0);
+            glVertex3f(lights[i]->x-0.005,lights[i]->y+0.005,0);
+        glEnd();
+       
+    }
 }
 
 void renderingThread(sf::Window* window)
 {
+    int i;
     // activate the window's context
     window->setActive(true);
 
@@ -144,6 +164,27 @@ void renderingThread(sf::Window* window)
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // Construct lights
+
+        int j = 0;
+        for (i=0; i<numLights * 3; i+= 3) {
+            //std::cout << lights[j]->x << std::endl;
+            lightPositions[i + 0] = (lights[j]->x + 1) * 0.5;
+            lightPositions[i + 1] = (lights[j]->y + 1) * 0.5;
+            lightPositions[i + 2] = lights[j]->z;
+
+            lightColours[i + 0]   = lights[j]->r;
+            lightColours[i + 1]   = lights[j]->g;
+            lightColours[i + 2]   = lights[j]->b;
+
+            lightIntensities[j] = lights[j]->intensity;
+
+            lightFalloffs[i + 0] = 1;
+            lightFalloffs[i + 1] = 1;
+            lightFalloffs[i + 2] = 1;
+            j += 1;
+        }
+
         // draw...
         renderTest();
 
@@ -154,81 +195,82 @@ void renderingThread(sf::Window* window)
 
 void glInit () {
 
-	if (!diffuseMap.loadFromFile("../assets/textures/brick_768_768/brick_768_768_diffuse.png")) {
-    	std::cout << "failed to load texture" << std::endl;
-    	return;
+    if (!diffuseMap.loadFromFile("../assets/textures/brick_768_768/brick_768_768_diffuse.png")) {
+        std::cout << "failed to load texture" << std::endl;
+        return;
     }
     if (!heightMap.loadFromFile("../assets/textures/brick_768_768/brick_768_768_height.png")) {
-    	std::cout << "failed to load texture" << std::endl;
-    	return;
+        std::cout << "failed to load texture" << std::endl;
+        return;
     }
     if (!normalMap.loadFromFile("../assets/textures/brick_768_768/brick_768_768_normal.png")) {
-    	std::cout << "failed to load texture" << std::endl;
-    	return;
+        std::cout << "failed to load texture" << std::endl;
+        return;
     }
 
-	std::cout << "loaded texture" << std::endl;
+    std::cout << "loaded texture" << std::endl;
 
-	glViewport(0, 0, WIDTH, HEIGHT);
-	glOrtho(0, WIDTH, HEIGHT, 0, 0, 1000);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
+    glViewport(0, 0, WIDTH, HEIGHT);
+    glOrtho(0, WIDTH, HEIGHT, 0, 0, 1000);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 
-	glGenTextures(1, &diffuseHandle);
-	glBindTexture(GL_TEXTURE_2D, diffuseHandle);
-	glTexImage2D(
-		GL_TEXTURE_2D, 0, GL_RGBA,
-		diffuseMap.getSize().x, diffuseMap.getSize().y,
-		0,
-		GL_RGBA, GL_UNSIGNED_BYTE, diffuseMap.getPixelsPtr()
-	);
+    glGenTextures(1, &diffuseHandle);
+    glBindTexture(GL_TEXTURE_2D, diffuseHandle);
+    glTexImage2D(
+        GL_TEXTURE_2D, 0, GL_RGBA,
+        diffuseMap.getSize().x, diffuseMap.getSize().y,
+        0,
+        GL_RGBA, GL_UNSIGNED_BYTE, diffuseMap.getPixelsPtr()
+    );
 
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-	glGenTextures(1, &heightHandle);
-	glBindTexture(GL_TEXTURE_2D, heightHandle);
-	glTexImage2D(
-		GL_TEXTURE_2D, 0, GL_RGBA,
-		heightMap.getSize().x, heightMap.getSize().y,
-		0,
-		GL_RGBA, GL_UNSIGNED_BYTE, heightMap.getPixelsPtr()
-	);
+    glGenTextures(1, &heightHandle);
+    glBindTexture(GL_TEXTURE_2D, heightHandle);
+    glTexImage2D(
+        GL_TEXTURE_2D, 0, GL_RGBA,
+        heightMap.getSize().x, heightMap.getSize().y,
+        0,
+        GL_RGBA, GL_UNSIGNED_BYTE, heightMap.getPixelsPtr()
+    );
 
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-	glGenTextures(1, &normalHandle);
-	glBindTexture(GL_TEXTURE_2D, normalHandle);
-	glTexImage2D(
-		GL_TEXTURE_2D, 0, GL_RGBA,
-		normalMap.getSize().x, normalMap.getSize().y,
-		0,
-		GL_RGBA, GL_UNSIGNED_BYTE, normalMap.getPixelsPtr()
-	);
+    glGenTextures(1, &normalHandle);
+    glBindTexture(GL_TEXTURE_2D, normalHandle);
+    glTexImage2D(
+        GL_TEXTURE_2D, 0, GL_RGBA,
+        normalMap.getSize().x, normalMap.getSize().y,
+        0,
+        GL_RGBA, GL_UNSIGNED_BYTE, normalMap.getPixelsPtr()
+    );
 
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
-	loadShader("../assets/shaders/lightingtest.frag", "lightingtest");
+    loadShader("../assets/shaders/lightingtest.frag", "lightingtest");
 
- 	shaderProgram = glCreateProgram();
-	pixelShader = shaders["lightingtest"];
+     shaderProgram = glCreateProgram();
+    pixelShader = shaders["lightingtest"];
 
-	glAttachShader(shaderProgram, pixelShader);
-	glLinkProgram(shaderProgram);
+    glAttachShader(shaderProgram, pixelShader);
+    glLinkProgram(shaderProgram);
 
 }
 
 int main (int argc, char ** argv) {
 
-	std::cout << "Relic C++ Version" << std::endl;
+    std::cout << "Relic C++ Version" << std::endl;
 
-	sf::Window window(sf::VideoMode(WIDTH, HEIGHT), "Relic", sf::Style::Default, sf::ContextSettings(32));
+    sf::Window window(sf::VideoMode(WIDTH, HEIGHT), "Relic", sf::Style::Default, sf::ContextSettings(32));
     window.setVerticalSyncEnabled(true);
+    window.setMouseCursorVisible(false);
 
     // load resources, initialize the OpenGL states, ...
-	glInit();
+    glInit();
 
     sf::Thread thread(&renderingThread, &window);
     thread.launch();
@@ -237,10 +279,23 @@ int main (int argc, char ** argv) {
 
     srand(time(NULL));
 
+    int i;
+    Light * light;
+    for (i=0;i<numLights;i++) {
+        light = new Light();
+        // light->x = rand() % 2 - 1;
+        // light->y = rand() % 2 - 1;
+        // light->z = rand() % 2 - 1;
+        lights[i] = light;
+	}
+
+    i = 0;
+    selectedLight = lights[i];
+
     // run the main loop
     while (true)
     {
-    	double elapsedTime = clock.restart().asMilliseconds();
+        double elapsedTime = clock.restart().asMilliseconds();
         // handle events
         sf::Event event;
         while (window.pollEvent(event))
@@ -257,30 +312,32 @@ int main (int argc, char ** argv) {
                 WIDTH = event.size.width;
                 HEIGHT = event.size.height;
             } else if (event.type == sf::Event::MouseButtonReleased) {
-	        	light.r = rand() % 0xFF;
-	        	light.g = rand() % 0xFF;
-	        	light.b = rand() % 0xFF;
+                i += 1;
+                selectedLight = lights[i % numLights];
             } else if (event.type == sf::Event::KeyPressed) {
-            	if (event.key.code == 0) {
-            		light.intensity *= 1.2;
-            	}  else if (event.key.code == 3) {
-					light.intensity *= 0.8;
-            	} else if (event.key.code == 36) {
-            		exit(0);
-            	}
-            	//std::cout << event.key.code << std::endl;
+                if (event.key.code == 0) {
+                    selectedLight->intensity *= 1.2;
+                }  else if (event.key.code == 3) {
+                    selectedLight->intensity *= 0.8;
+                }  else if (event.key.code == 4) {
+                	selectedLight->r = rand() % 0xFF;
+	                selectedLight->g = rand() % 0xFF;
+	                selectedLight->b = rand() % 0xFF;
+                } else if (event.key.code == 36) {
+                    exit(0);
+                }
             }
         }
  
         t += 1;
 
-        light.x += (sf::Mouse::getPosition(window).x / (double)WIDTH  - 0.5);
-        light.y -= (sf::Mouse::getPosition(window).y / (double)HEIGHT - 0.5);
+        selectedLight->x += (sf::Mouse::getPosition(window).x / (double)WIDTH  - 0.5);
+        selectedLight->y -= (sf::Mouse::getPosition(window).y / (double)HEIGHT - 0.5);
         sf::Mouse::setPosition(sf::Vector2i(WIDTH / 2, HEIGHT / 2), window);
 
         elapsedTime = clock.restart().asMilliseconds();
 
-    	sf::sleep(sf::milliseconds(millisecondsPerFrame - elapsedTime));
+        sf::sleep(sf::milliseconds(millisecondsPerFrame - elapsedTime));
     }
 
     return 0;
