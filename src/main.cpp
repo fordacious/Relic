@@ -10,8 +10,7 @@
 #include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
 
-typedef char byte;
-
+// Light stuff
 struct Light {
     double x = 0;
     double y = 0;
@@ -33,8 +32,7 @@ float lightIntensities[10];
 float lightFalloffs   [10*3];
 int numLights = 3;
 
-std::map<std::string, GLuint> shaders;
-
+// Window stuff
 double FPS = 60;
 double millisecondsPerFrame = 1000/FPS;
 double WIDTH = 800;
@@ -42,9 +40,13 @@ double HEIGHT = 600;
 
 double t = 0;
 
+// Shader stuff
 GLuint shaderProgram;
 GLuint pixelShader;
 
+std::map<std::string, GLuint> shaders;
+
+// Texture stuff
 GLuint diffuseHandle = 0;
 GLuint heightHandle  = 0;
 GLuint normalHandle  = 0;
@@ -72,6 +74,8 @@ GLuint compileShader(GLuint type, const GLchar *source, GLint sourceLen) {
    return shader;
 }
 
+// Loads and compiles a shader for you
+// maps names to shaders too :D
 void loadShader(std::string filename, std::string refname) {
    std::cout << "Loading " << (filename) << std::endl;
 
@@ -96,6 +100,8 @@ void renderTest() {
     glLoadIdentity();
 
     glUseProgram(shaderProgram);
+
+    // Set all the variables in the shader
     glUniform3fv(glGetUniformLocation(shaderProgram, "lightPositions"),   numLights * 3, lightPositions);//(light.x + 1) * 0.5, (light.y + 1) * 0.5, light.z);
     glUniform3fv(glGetUniformLocation(shaderProgram, "lightColours"),     numLights * 3, lightColours);//light.r / 0xff, light.g / 0xff, light.b / 0xff);
     glUniform1fv(glGetUniformLocation(shaderProgram, "lightIntensities"), numLights, lightIntensities);// light.intensity);
@@ -118,6 +124,7 @@ void renderTest() {
 
     glUniform2f(glGetUniformLocation(shaderProgram, "resolution"), 800, 600);
 
+    // Draw the actual brick wall
     glBegin(GL_QUADS);
         glColor3d(0.5,0.5,0.5);
 
@@ -127,6 +134,7 @@ void renderTest() {
         glVertex3f(-0.5,0.5,0);
     glEnd();
 
+    // Draw each light dot so you know where the lights are
     glUseProgram(0);
     int i = 0;
     for (i=0;i<numLights;i++) {
@@ -164,8 +172,7 @@ void renderingThread(sf::Window* window)
         // clear the buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Construct lights
-
+        // Construct light arrays
         int j = 0;
         for (i=0; i<numLights * 3; i+= 3) {
             //std::cout << lights[j]->x << std::endl;
@@ -195,6 +202,8 @@ void renderingThread(sf::Window* window)
 
 void glInit () {
 
+	// Load the 3 texture files
+
     if (!diffuseMap.loadFromFile("../assets/textures/brick_768_768/brick_768_768_diffuse.png")) {
         std::cout << "failed to load texture" << std::endl;
         return;
@@ -209,6 +218,8 @@ void glInit () {
     }
 
     std::cout << "loaded texture" << std::endl;
+
+    // Load and bind the textures on the graphics card
 
     glViewport(0, 0, WIDTH, HEIGHT);
     glOrtho(0, WIDTH, HEIGHT, 0, 0, 1000);
@@ -251,9 +262,11 @@ void glInit () {
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 
+    // Load the lighting shader
+
     loadShader("../assets/shaders/lightingtest.frag", "lightingtest");
 
-     shaderProgram = glCreateProgram();
+    shaderProgram = glCreateProgram();
     pixelShader = shaders["lightingtest"];
 
     glAttachShader(shaderProgram, pixelShader);
@@ -272,6 +285,7 @@ int main (int argc, char ** argv) {
     // load resources, initialize the OpenGL states, ...
     glInit();
 
+    // Start teh rendering thread
     sf::Thread thread(&renderingThread, &window);
     thread.launch();
 
@@ -283,9 +297,6 @@ int main (int argc, char ** argv) {
     Light * light;
     for (i=0;i<numLights;i++) {
         light = new Light();
-        // light->x = rand() % 2 - 1;
-        // light->y = rand() % 2 - 1;
-        // light->z = rand() % 2 - 1;
         lights[i] = light;
 	}
 
@@ -315,15 +326,15 @@ int main (int argc, char ** argv) {
                 i += 1;
                 selectedLight = lights[i % numLights];
             } else if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == 0) {
+                if (event.key.code == 0) { // A pressed - [intensity intensifies]
                     selectedLight->intensity *= 1.2;
-                }  else if (event.key.code == 3) {
+                }  else if (event.key.code == 3) { // D pressed - decrease intensity
                     selectedLight->intensity *= 0.8;
-                }  else if (event.key.code == 4) {
+                }  else if (event.key.code == 4) { // E - randomises light colour
                 	selectedLight->r = rand() % 0xFF;
 	                selectedLight->g = rand() % 0xFF;
 	                selectedLight->b = rand() % 0xFF;
-                } else if (event.key.code == 36) {
+                } else if (event.key.code == 36) { // ESC - closes program
                     exit(0);
                 }
             }
@@ -339,6 +350,8 @@ int main (int argc, char ** argv) {
 
         sf::sleep(sf::milliseconds(millisecondsPerFrame - elapsedTime));
     }
+
+    std::cout << "Bai!!!" << std::endl;
 
     return 0;
 }
