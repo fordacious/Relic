@@ -25,11 +25,12 @@ struct Light {
 
 Light * selectedLight;
 
-Light * lights   [10];
+Light * lights        [10];
 float lightPositions  [10*3];
 float lightColours    [10*3];
 float lightIntensities[10];
 float lightFalloffs   [10*3];
+
 int numLights = 3;
 
 // Window stuff
@@ -79,7 +80,7 @@ GLuint compileShader(GLuint type, const GLchar *source, GLint sourceLen) {
 void loadShader(std::string filename, std::string refname) {
    std::cout << "Loading " << (filename) << std::endl;
 
-   std::ifstream ifs(filename);
+   std::ifstream ifs(filename.c_str());
    std::string content(
       (std::istreambuf_iterator<char>(ifs)),
       (std::istreambuf_iterator<char>())
