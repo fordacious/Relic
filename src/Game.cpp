@@ -7,7 +7,7 @@
 #include "DisplayEntity.h"
 #include "RenderUtils.h"
 
-#define NUM_ENTITIES 10000
+#define NUM_ENTITIES 20000
 
 Game::Game ():player(Player()) {
 

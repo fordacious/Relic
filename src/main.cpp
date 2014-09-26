@@ -16,7 +16,7 @@
 
 // Window stuff
 double FPS = 60;
-double microsecondsPerFrame = 1000000/FPS;
+double MICROSECONDS_PER_FRAME = 1000000/FPS;
 double WIDTH = 1024;
 double HEIGHT = 768;
 
@@ -41,12 +41,19 @@ void renderingThread(sf::Window * window) {
 
     glMatrixMode(GL_MODELVIEW);
 
+    sf::Clock clock;
+
     while (window->isOpen()) {
+        clock.restart();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         render(currentGame);
 
         window->display();
+
+        if (currentFrame % 60 == 0) {
+            std::cout << 1000000 / clock.restart().asMicroseconds() << " FPS" << std::endl;
+        }
     }
 }
 
@@ -62,7 +69,7 @@ int main (int argc, char ** argv) {
     std::cout << "Relic C++ Version" << std::endl;
 
     sf::Window window(sf::VideoMode(WIDTH, HEIGHT), "Relic", sf::Style::Default, sf::ContextSettings(32));
-    window.setVerticalSyncEnabled(true);
+    window.setVerticalSyncEnabled(false);
     window.setMouseCursorVisible(false);
 
     glInit();
@@ -102,7 +109,9 @@ int main (int argc, char ** argv) {
         mousePos.y -= (sf::Mouse::getPosition(window).y / (double)HEIGHT - 0.5);
         sf::Mouse::setPosition(sf::Vector2i(WIDTH / 2, HEIGHT / 2), window);
 
-        sf::sleep(sf::microseconds(microsecondsPerFrame - clock.restart().asMicroseconds()));
+        double d = MICROSECONDS_PER_FRAME - clock.restart().asMicroseconds();
+
+        sf::sleep(sf::microseconds(d < 0 ? 0 : d));
     }
 
     return 0;
