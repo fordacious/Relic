@@ -8,6 +8,10 @@ class Entity {
         Vector2D<double> accel;
         Vector2D<double> vel;
         Vector2D<double> pos;
+
+        double rotation = 0;
+
+        virtual void update();
 };
 
 #endif

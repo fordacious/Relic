@@ -1,18 +1,43 @@
+#include <iostream>
+
+#include <stdlib.h>
 #include <math.h>
 
-#include <SFML/OpenGL.hpp>
-
 #include "Game.h"
+#include "DisplayEntity.h"
 #include "RenderUtils.h"
 
-Game::Game ():player(Player()) {}
+#define NUM_ENTITIES 10000
 
-void Game::render () {
-    double d = sin(this->player.size / 20) / 10;
-    RenderUtils::renderSquare(this->player.pos, d,d, 
-        RenderUtils::Colour(0x00, 0xaa, 0xcc));
+Game::Game ():player(Player()) {
+
+    for (int i = 0 ; i < NUM_ENTITIES; i ++) {
+        DisplayEntity * d = new DisplayEntity();
+        d->r = (rand() / (double)RAND_MAX) * 1 + 0.5;
+        d->g = (rand() / (double)RAND_MAX) * 1 + 0.5;
+        d->b = (rand() / (double)RAND_MAX) * 1 + 0.5;
+        d->pos.x = (rand() / (double)RAND_MAX) * 2 - 1;
+        d->pos.y = (rand() / (double)RAND_MAX) * 2 - 1;
+        d->vel.x = ((rand() / (double)RAND_MAX) * 2 - 1) / 50;
+        d->vel.y = ((rand() / (double)RAND_MAX) * 2 - 1) / 50;
+        entitiesTest.push_back(d);
+    }
+
 }
 
-void Game::update (int currentFrame) {
-    this->player.size = currentFrame;
+void Game::render (int currentFrame) {
+    DisplayEntity * curEntity;
+    for (int i = 0 ; i < NUM_ENTITIES; i ++) {
+        entitiesTest[i]->render(currentFrame);
+    }
+}
+
+void Game::update (int currentFrame, Vector2D<double> mouse) {
+    DisplayEntity * curEntity;
+    for (int i = 0 ; i < NUM_ENTITIES; i ++) {
+        curEntity = entitiesTest[i];
+        curEntity->accel.x = (mouse.x - curEntity->pos.x) / 2000;
+        curEntity->accel.y = (mouse.y - curEntity->pos.y) / 2000;
+        curEntity->update();
+    }
 }

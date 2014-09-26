@@ -16,9 +16,9 @@
 
 // Window stuff
 double FPS = 60;
-double millisecondsPerFrame = 1000/FPS;
-double WIDTH = 800;
-double HEIGHT = 600;
+double microsecondsPerFrame = 1000000/FPS;
+double WIDTH = 1024;
+double HEIGHT = 768;
 
 int currentFrame = 0;
 
@@ -32,7 +32,7 @@ void render (Game * game) {
     
     RenderUtils::renderSquare (mousePos, 0.005, 0.005, RenderUtils::Colour(0xff, 0xff, 0xff));
 
-    game->render();
+    game->render(currentFrame);
 }
 
 void renderingThread(sf::Window * window) {
@@ -62,7 +62,7 @@ int main (int argc, char ** argv) {
     std::cout << "Relic C++ Version" << std::endl;
 
     sf::Window window(sf::VideoMode(WIDTH, HEIGHT), "Relic", sf::Style::Default, sf::ContextSettings(32));
-    //window.setVerticalSyncEnabled(true);
+    window.setVerticalSyncEnabled(true);
     window.setMouseCursorVisible(false);
 
     glInit();
@@ -74,12 +74,11 @@ int main (int argc, char ** argv) {
     thread.launch();
 
     sf::Clock clock;
-    double elapsedTime;
 
     srand(time(NULL));
 
     while (true) {
-        clock.restart().asMilliseconds();
+        clock.restart();
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
@@ -95,7 +94,7 @@ int main (int argc, char ** argv) {
             }
         }
 
-        game.update(currentFrame);
+        game.update(currentFrame, mousePos);
  
         currentFrame += 1;
 
@@ -103,9 +102,7 @@ int main (int argc, char ** argv) {
         mousePos.y -= (sf::Mouse::getPosition(window).y / (double)HEIGHT - 0.5);
         sf::Mouse::setPosition(sf::Vector2i(WIDTH / 2, HEIGHT / 2), window);
 
-        elapsedTime = clock.restart().asMilliseconds();
-
-        sf::sleep(sf::milliseconds(millisecondsPerFrame - elapsedTime));
+        sf::sleep(sf::microseconds(microsecondsPerFrame - clock.restart().asMicroseconds()));
     }
 
     return 0;
