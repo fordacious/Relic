@@ -1,3 +1,5 @@
+// entity of type player
+
 #include "Entity.h"
 #include "DisplayEntity.h"
 #ifndef __PLAYER_H__
@@ -8,7 +10,7 @@ class Player : public DisplayEntity {
         double size;
 
         void update();
-        void render(int);
+        void render(RenderUtils::DisplayState);
 };
 
 #endif

@@ -1,3 +1,5 @@
+// Game
+
 #include "DisplayObject.h"
 #include "Player.h"
 #include "Vector2D.h"
@@ -10,7 +12,7 @@ class Game : public DisplayObject {
         bool editMode;
 
         void update(int,Vector2D<double>);
-        void render(int);
+        void render(RenderUtils::DisplayState);
 
         Game();
 

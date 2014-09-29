@@ -1,3 +1,5 @@
+// renderable entity
+
 #include "Entity.h"
 #include "DisplayObject.h"
 
@@ -9,7 +11,14 @@ class DisplayEntity : public Entity, public DisplayObject {
         int r;
         int g;
         int b;
-        virtual void render(int);
+
+        double size;
+
+        DisplayEntity () {
+            size = (rand() / (double)RAND_MAX) * 4;
+        }
+
+        virtual void render(RenderUtils::DisplayState);
 };
 
 #endif

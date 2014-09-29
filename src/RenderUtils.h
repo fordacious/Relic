@@ -1,3 +1,7 @@
+// Can probably keep all rendering code in here, or a "renderer" package
+
+
+#include <iostream>
 #include "Vector2D.h"
 
 #include <SFML/OpenGL.hpp>
@@ -11,6 +15,26 @@ namespace RenderUtils {
         int r; int g; int b;
         Colour (int r, int g, int b):r(r),g(g),b(b) {}
     };
+
+    struct DisplayState {
+        double width, height; 
+        int currentFrame;
+        Vector2D<double> mousePos;
+        DisplayState (int w, int h, int cf, Vector2D<double> mp):
+            width(w),height(h),currentFrame(cf),mousePos(mp) {};
+    };
+
+    // could potentially have multiple renderers
+    static void init (double WIDTH, double HEIGHT) {
+        glViewport(0, 0, WIDTH, HEIGHT);
+        glOrtho(0, WIDTH, HEIGHT, 0, 0, 1000);
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LEQUAL);
+    }
+
+    static void resize (double w, double h) {
+        glViewport(0, 0, w, h);
+    }
 
     static void renderSquare (Vector2D<double> & pos, double width, double height, Colour c) {
         glBegin(GL_QUADS);

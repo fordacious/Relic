@@ -7,7 +7,6 @@
 #include <stdlib.h>
 
 #include <SFML/Window.hpp>
-#include <SFML/OpenGL.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "Vector2D.h"
@@ -29,10 +28,8 @@ Game * currentGame;
 void render (Game * game) {
     glLoadIdentity();
     glUseProgram(0);
-    
-    RenderUtils::renderSquare (mousePos, 0.005, 0.005, RenderUtils::Colour(0xff, 0xff, 0xff));
 
-    game->render(currentFrame);
+    game->render(RenderUtils::DisplayState(WIDTH, HEIGHT, currentFrame, mousePos));
 }
 
 void renderingThread(sf::Window * window) {
@@ -57,13 +54,6 @@ void renderingThread(sf::Window * window) {
     }
 }
 
-void glInit () {
-    glViewport(0, 0, WIDTH, HEIGHT);
-    glOrtho(0, WIDTH, HEIGHT, 0, 0, 1000);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-}
-
 int main (int argc, char ** argv) {
 
     std::cout << "Relic C++ Version" << std::endl;
@@ -72,7 +62,7 @@ int main (int argc, char ** argv) {
     window.setVerticalSyncEnabled(false);
     window.setMouseCursorVisible(false);
 
-    glInit();
+    RenderUtils::init(WIDTH, HEIGHT);
 
     Game game = Game();
     currentGame = &game;
@@ -91,7 +81,7 @@ int main (int argc, char ** argv) {
             if (event.type == sf::Event::Closed) {
                 break;
             } else if (event.type == sf::Event::Resized) {
-                glViewport(0, 0, event.size.width, event.size.height);
+                RenderUtils::resize(event.size.width, event.size.height);
                 WIDTH = event.size.width;
                 HEIGHT = event.size.height;
             } else if (event.type == sf::Event::KeyPressed) {
@@ -105,8 +95,8 @@ int main (int argc, char ** argv) {
  
         currentFrame += 1;
 
-        mousePos.x += (sf::Mouse::getPosition(window).x / (double)WIDTH  - 0.5);
-        mousePos.y -= (sf::Mouse::getPosition(window).y / (double)HEIGHT - 0.5);
+        mousePos.x += (sf::Mouse::getPosition(window).x / WIDTH  - 0.5);
+        mousePos.y -= (sf::Mouse::getPosition(window).y / HEIGHT - 0.5);
         sf::Mouse::setPosition(sf::Vector2i(WIDTH / 2, HEIGHT / 2), window);
 
         double d = MICROSECONDS_PER_FRAME - clock.restart().asMicroseconds();

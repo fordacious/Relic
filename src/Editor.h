@@ -1,3 +1,5 @@
+// Editor. Runs a game and allows you to edit it on the fly
+
 #ifndef __EDITOR_H__
 #define __EDITOR_H__
 

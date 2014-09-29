@@ -1,3 +1,5 @@
+// game entity
+
 #include "Vector2D.h"
 
 #ifndef __ENTITY_H__
