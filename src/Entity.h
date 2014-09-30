@@ -1,15 +1,19 @@
 // game entity
 
-#include "Vector2D.h"
+#include <map>
+#include <string>
+#include "Component.h"
 
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
 
 class Entity {
     public:
-        Vector2D<double> accel;
-        Vector2D<double> vel;
-        Vector2D<double> pos;
+        Component * addComponent(std::string typeName, Component *);
+        Component * removeComponent(std::string typeName);
+        Component * getComponent(std::string typeName);
+
+        std::map<std::string, Component *> components;
 
         double rotation = 0;
 

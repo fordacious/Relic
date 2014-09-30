@@ -7,8 +7,9 @@
 
 class Player : public DisplayEntity {
     public:
+        Player();
         double size;
-
+    protected:
         void update();
         void render(RenderUtils::DisplayState);
 };
