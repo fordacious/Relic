@@ -7,9 +7,8 @@
 
 class Component {
     public:
-        bool initialised;
+        bool initialised = false;
         void update();
-        Component ();
     protected:
         virtual void runStart () = 0;
         virtual void runUpdate () = 0;

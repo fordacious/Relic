@@ -1,4 +1,8 @@
+#include <algorithm>
+
 #include "DisplayObject.h"
+
+using namespace std;
 
 DisplayObject * DisplayObject::addChild (DisplayObject * obj) {
     children.push_back(obj);

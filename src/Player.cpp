@@ -4,8 +4,7 @@
 #include "PhysicsComponent.h"
 
 Player::Player () {
-    PhysicsComponent * pc = new PhysicsComponent();
-    addComponent(GET_COMPONENT_TYPE(PhysicsComponent), (Component *) pc);
+    addComponent(GET_COMPONENT_TYPE(PhysicsComponent), new PhysicsComponent());
 }
 
 void Player::render (RenderUtils::DisplayState ds) {

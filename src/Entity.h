@@ -7,15 +7,17 @@
 #ifndef __ENTITY_H__
 #define __ENTITY_H__
 
+typedef std::string ComponentType;
+
 class Entity {
     public:
-        Component * addComponent(std::string typeName, Component *);
-        Component * removeComponent(std::string typeName);
-        Component * getComponent(std::string typeName);
+        Component * addComponent(ComponentType, void *);
+        Component * removeComponent(ComponentType);
+        Component * getComponent(ComponentType);
 
         std::map<std::string, Component *> components;
 
-        double rotation = 0;
+        bool destroyed = false;
 
         virtual void update();
 };

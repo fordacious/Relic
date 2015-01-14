@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -8,6 +9,12 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+
+#ifdef _WIN32
+    #include <Windows.h>
+    #include <gl\gl.h> 
+    #include <gl\glu.h>
+#endif
 
 #include "Vector2D.h"
 #include "Game.h"
@@ -27,7 +34,7 @@ Game * currentGame;
 
 void render (Game * game) {
     glLoadIdentity();
-    glUseProgram(0);
+    //glUseProgram(0);
 
     game->render(RenderUtils::DisplayState(WIDTH, HEIGHT, currentFrame, mousePos));
 }
@@ -67,12 +74,15 @@ int main (int argc, char ** argv) {
     Game game = Game();
     currentGame = &game;
 
+    window.setActive(false);
     sf::Thread thread(&renderingThread, &window);
     thread.launch();
 
     sf::Clock clock;
 
     srand(time(NULL));
+
+    sf::Mouse::setPosition(sf::Vector2i(WIDTH / 2, HEIGHT / 2), window);
 
     while (true) {
         clock.restart();

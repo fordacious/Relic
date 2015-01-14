@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include <stdlib.h>
 #include <math.h>
@@ -12,6 +13,10 @@
 
 Game::Game () {
 
+    // TODO, could put things like shrapnel and particles on separate thread as its inert
+    // each update, incrememnt 'updatesToPerform' on each thread. Threads then perform that
+    // amount of updates next frame.
+
     player = Player();
 
     for (int i = 0 ; i < NUM_ENTITIES; i ++) {
@@ -19,16 +24,16 @@ Game::Game () {
 
         PhysicsComponent * pc = 
             (PhysicsComponent *)d->addComponent(GET_COMPONENT_TYPE(PhysicsComponent), 
-                (Component *)new PhysicsComponent());
+                new PhysicsComponent());
 
-        d->r = (rand() / (double)RAND_MAX) * 1 + 0.5;
-        d->g = (rand() / (double)RAND_MAX) * 1 + 0.5;
-        d->b = (rand() / (double)RAND_MAX) * 1 + 0.5;
+        d->colour.r = (rand() / (double)RAND_MAX) * 1 + 0.5;
+        d->colour.g = (rand() / (double)RAND_MAX) * 1 + 0.5;
+        d->colour.b = (rand() / (double)RAND_MAX) * 1 + 0.5;
 
-        pc->pos.x = (rand() / (double)RAND_MAX) * 2 - 1;
-        pc->pos.y = (rand() / (double)RAND_MAX) * 2 - 1;
-        pc->vel.x = ((rand() / (double)RAND_MAX) * 2 - 1) / 50;
-        pc->vel.y = ((rand() / (double)RAND_MAX) * 2 - 1) / 50;
+        //pc->pos.x = (rand() / (double)RAND_MAX) * 2 - 1;
+        //pc->pos.y = (rand() / (double)RAND_MAX) * 2 - 1;
+        //pc->vel.x = ((rand() / (double)RAND_MAX) * 2 - 1) / 50;
+        //pc->vel.y = ((rand() / (double)RAND_MAX) * 2 - 1) / 50;
 
         entitiesTest.push_back((DisplayEntity *)this->addChild(d));
     }
@@ -45,8 +50,8 @@ void Game::update (int currentFrame, Vector2D<double> mouse) {
         PhysicsComponent * physComponent = (PhysicsComponent *)curEntity->getComponent(GET_COMPONENT_TYPE(PhysicsComponent));
         physComponent->accel.x = (mouse.x - physComponent->pos.x) / 5000 / curEntity->size * 5;
         physComponent->accel.y = (mouse.y - physComponent->pos.y) / 5000 / curEntity->size * 5;
-        physComponent->pos.x = fmin(1024, physComponent->pos.x);
-        physComponent->pos.x = fmax(0, physComponent->pos.x);
+        //physComponent->pos.x = fmin(1024, physComponent->pos.x);
+        //physComponent->pos.x = fmax(0, physComponent->pos.x);
         curEntity->update();
     });
 }
