@@ -1,11 +1,9 @@
-// entity of type player
-
-#include "Entity.h"
-#include "DisplayEntity.h"
 #ifndef __PLAYER_H__
 #define __PLAYER_H__
 
-class Player : public DisplayEntity {
+#include "ComponentSystem.h"
+
+class Player : public Entity {
     public:
         Player();
         double size;

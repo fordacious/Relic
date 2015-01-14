@@ -1,8 +1,7 @@
 // Can probably keep all rendering code in here, or a "renderer" package
 
-
 #include <iostream>
-#include "Vector2D.h"
+#include <SFML/System.hpp>
 
 #include <SFML/OpenGL.hpp>
 
@@ -19,8 +18,8 @@ namespace RenderUtils {
     struct DisplayState {
         double width, height; 
         int currentFrame;
-        Vector2D<double> mousePos;
-        DisplayState (int w, int h, int cf, Vector2D<double> mp):
+        sf::Vector2<double> mousePos;
+        DisplayState (int w, int h, int cf, sf::Vector2<double> mp):
             width(w),height(h),currentFrame(cf),mousePos(mp) {};
     };
 
@@ -36,7 +35,7 @@ namespace RenderUtils {
         glViewport(0, 0, w, h);
     }
 
-    static void renderSquare (Vector2D<double> & pos, double width, double height, Colour c) {
+    static void renderSquare (sf::Vector2<double> & pos, double width, double height, Colour c) {
         glBegin(GL_QUADS);
             glColor3d(c.r,c.g,c.b);
             glVertex3f(pos.x-width,pos.y-height,0);

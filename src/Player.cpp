@@ -8,7 +8,7 @@ Player::Player () {
 }
 
 void Player::render (RenderUtils::DisplayState ds) {
-    DisplayEntity::render(ds);
+    DisplayObject::render(ds);
 }
 
 void Player::update () {

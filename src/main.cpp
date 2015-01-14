@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -9,6 +8,7 @@
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
 
 #ifdef _WIN32
     #include <Windows.h>
@@ -16,7 +16,6 @@
     #include <gl\glu.h>
 #endif
 
-#include "Vector2D.h"
 #include "Game.h"
 #include "RenderUtils.h"
 
@@ -28,7 +27,7 @@ double HEIGHT = 768;
 
 int currentFrame = 0;
 
-struct Vector2D<double> mousePos = {0};
+struct sf::Vector2<double> mousePos = sf::Vector2<double>(0,0);
 
 Game * currentGame;
 
@@ -95,7 +94,7 @@ int main (int argc, char ** argv) {
                 WIDTH = event.size.width;
                 HEIGHT = event.size.height;
             } else if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == 36) { // ESC - closes program
+                if (event.key.code == sf::Keyboard::Escape) { // ESC - closes program
                     exit(0);
                 }
             }

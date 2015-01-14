@@ -1,8 +1,6 @@
-
 #include <stdlib.h>
 #include <math.h>
 
-#include "DisplayEntity.h"
 #include "RenderUtils.h"
 #include "PhysicsComponent.h"
 
@@ -12,8 +10,5 @@ void DisplayEntity::render(RenderUtils::DisplayState ds) {
     //glTranslated(pos.x, pos.y, 0);
 
     //double d = sin((double)currentFrame / 30) / 40 + 0.01;
-    if (!visible) { return; }
-    RenderUtils::renderSquare(((PhysicsComponent *)getComponent(GET_COMPONENT_TYPE(PhysicsComponent)))->pos, 
-        size / ds.width, size / ds.height, 
-        colour);
+    
 }

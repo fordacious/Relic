@@ -1,24 +1,24 @@
-// Game
+#ifndef __GAME_H__
+#define __GAME_H__
+
+#include <SFML/System.hpp>
 
 #include "DisplayObject.h"
 #include "Player.h"
-#include "Vector2D.h"
-#include "DisplayEntity.h"
-#ifndef __GAME_H__
-#define __GAME_H__
+#include "Entity.h"
 
 class Game : public DisplayObject {
     public:
         bool editMode;
 
-        void update(int,Vector2D<double>);
+        void update(int currentFrame, sf::Vector2<double> mousePosition);
         void render(RenderUtils::DisplayState);
 
         Game();
 
     private:
         Player player;
-        std::vector<DisplayEntity *> entitiesTest;
+        std::vector<Entity *> entitiesTest;
         //std::Vector<Enemy> enemies;
         //std::Vector<Entity> props;
 
