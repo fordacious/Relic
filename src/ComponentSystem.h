@@ -6,8 +6,6 @@
 
 #include <SFML/System.hpp>
 
-#include "DisplayObject.h"
-
 #define GET_COMPONENT_TYPE(X) #X
 
 class Entity;
@@ -24,18 +22,27 @@ class Component {
 
 typedef std::string ComponentType;
 
-class Entity : public DisplayObject {
-public:
-    Component * addComponent(ComponentType, void *);
-    Component * removeComponent(ComponentType);
-    Component * getComponent(ComponentType);
+struct Transform {
+    sf::Vector2<double> pos = sf::Vector2<double>(0, 0);
+    sf::Vector2<double> scale = sf::Vector2<double>(0, 0);
+    double rotation = 0;
+};
 
-    bool destroyed = false;
+class Entity {
+    public:
+        Component * addComponent(ComponentType, void *);
+        Component * removeComponent(ComponentType);
+        Component * getComponent(ComponentType);
 
-    virtual void update();
+        bool destroyed = false;
 
-private:
-    std::map<std::string, Component *> components;
+        // Transform
+        Transform transform;
+
+        virtual void update();
+
+    private:
+        std::map<std::string, Component *> components;
 };
 
 #endif

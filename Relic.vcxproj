@@ -141,9 +141,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\ComponentSystem.cpp" />
-    <ClCompile Include="src\DisplayObject.cpp" />
+    <ClCompile Include="src\DisplaySystem.cpp" />
     <ClCompile Include="src\Editor.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PhysicsComponent.cpp" />
@@ -151,9 +150,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ComponentSystem.h" />
-    <ClInclude Include="src\DisplayObject.h" />
+    <ClInclude Include="src\DisplaySystem.h" />
     <ClInclude Include="src\Editor.h" />
-    <ClInclude Include="src\Entity.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\PhysicsComponent.h" />
     <ClInclude Include="src\Player.h" />

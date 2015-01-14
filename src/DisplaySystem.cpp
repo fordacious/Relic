@@ -1,11 +1,12 @@
 #include <algorithm>
 
-#include "DisplayObject.h"
+#include "DisplaySystem.h"
 
 using namespace std;
 
 DisplayObject * DisplayObject::addChild (DisplayObject * obj) {
     children.push_back(obj);
+    obj->parent = this;
     return obj;
 }
 DisplayObject * DisplayObject::addChildAt (DisplayObject * obj, int i) {
@@ -14,11 +15,13 @@ DisplayObject * DisplayObject::addChildAt (DisplayObject * obj, int i) {
 }
 DisplayObject * DisplayObject::removeChild (DisplayObject * obj) {
     children.erase(children.begin() + getChildPos(obj));
+    obj->parent = NULL;
     return obj;
 }
 DisplayObject * DisplayObject::removeChildAt (int i) {
     DisplayObject * obj = children[i];
     children.erase(children.begin() + i);
+    obj->parent = NULL;
     return obj;
 }
 

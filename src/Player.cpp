@@ -7,10 +7,6 @@ Player::Player () {
     addComponent(GET_COMPONENT_TYPE(PhysicsComponent), new PhysicsComponent());
 }
 
-void Player::render (RenderUtils::DisplayState ds) {
-    DisplayObject::render(ds);
-}
-
 void Player::update () {
     Entity::update();
 }

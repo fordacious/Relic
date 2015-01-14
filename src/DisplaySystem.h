@@ -4,18 +4,21 @@
 #include <vector>
 #include <SFML/System.hpp>
 #include "RenderUtils.h"
+#include "ComponentSystem.h"
 
 class DisplayObject {
     public:
+
+        DisplayObject * parent;
+
+        Entity * entity;
+
         std::vector<DisplayObject*> children;
         DisplayObject * addChild (DisplayObject*);
         DisplayObject * addChildAt (DisplayObject*, int);
         DisplayObject * removeChild (DisplayObject*);
         DisplayObject * removeChildAt (int);
 
-        sf::Vector2<double> pos = sf::Vector2<double>(0,0);
-        sf::Vector2<double> scale = sf::Vector2<double>(0, 0);
-        double rotation = 0;
         double alpha = 0;
         RenderUtils::Colour colour = RenderUtils::Colour(0, 0, 0);
 
@@ -26,5 +29,7 @@ class DisplayObject {
     private:
         int getChildPos(DisplayObject*);
 };
+
+class Stage : public DisplayObject {};
 
 #endif

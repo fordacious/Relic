@@ -9,7 +9,6 @@ class Player : public Entity {
         double size;
     protected:
         void update();
-        void render(RenderUtils::DisplayState);
 };
 
 #endif

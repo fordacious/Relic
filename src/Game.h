@@ -3,13 +3,13 @@
 
 #include <SFML/System.hpp>
 
-#include "DisplayObject.h"
+#include "DisplaySystem.h"
 #include "Player.h"
-#include "Entity.h"
+#include "ComponentSystem.h"
 
-class Game : public DisplayObject {
+class Game {
     public:
-        bool editMode;
+        Stage * stage;
 
         void update(int currentFrame, sf::Vector2<double> mousePosition);
         void render(RenderUtils::DisplayState);
