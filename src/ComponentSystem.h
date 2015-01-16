@@ -1,12 +1,15 @@
-#ifndef __COMPONENT_H__
-#define __COMPONENT_H__
+#ifndef __COMPONENTSYSTEM_H__
+#define __COMPONENTSYSTEM_H__
 
 #include <map>
 #include <string>
 
 #include <SFML/System.hpp>
 
+#include "EventSystem.h"
+
 #define GET_COMPONENT_TYPE(X) #X
+#define ADD_COMPONENT(X, ...) addComponent(GET_COMPONENT_TYPE(X), new X(__VA_ARGS__));
 
 class Entity;
 
@@ -28,13 +31,16 @@ struct Transform {
     double rotation = 0;
 };
 
-class Entity {
+class Entity : public EventDispatcher {
     public:
+        Entity(EventSystem *);
         Component * addComponent(ComponentType, void *);
         Component * removeComponent(ComponentType);
         Component * getComponent(ComponentType);
 
         bool destroyed = false;
+
+        EventSystem * eventSystem;
 
         // Transform
         Transform transform;

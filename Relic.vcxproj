@@ -95,7 +95,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>src\SFML\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\SFML\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -128,7 +128,7 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>src\SFML\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\SFML\include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -143,6 +143,7 @@
     <ClCompile Include="src\ComponentSystem.cpp" />
     <ClCompile Include="src\DisplaySystem.cpp" />
     <ClCompile Include="src\Editor.cpp" />
+    <ClCompile Include="src\EventSystem.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PhysicsComponent.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="src\ComponentSystem.h" />
     <ClInclude Include="src\DisplaySystem.h" />
     <ClInclude Include="src\Editor.h" />
+    <ClInclude Include="src\EventSystem.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\PhysicsComponent.h" />
     <ClInclude Include="src\Player.h" />

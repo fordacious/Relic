@@ -7,6 +7,7 @@ using namespace std;
 DisplayObject * DisplayObject::addChild (DisplayObject * obj) {
     children.push_back(obj);
     obj->parent = this;
+    obj->stage = stage;
     return obj;
 }
 DisplayObject * DisplayObject::addChildAt (DisplayObject * obj, int i) {
@@ -26,9 +27,9 @@ DisplayObject * DisplayObject::removeChildAt (int i) {
 }
 
 void DisplayObject::render (RenderUtils::DisplayState ds) {
-    for_each (children.begin(), children.end(), [ds] (DisplayObject * child) {
+    for (auto child : children) {
         child->render(ds);
-    });
+    };
 }
 
 int DisplayObject::getChildPos (DisplayObject * obj) {

@@ -86,6 +86,7 @@ int main (int argc, char ** argv) {
     while (true) {
         clock.restart();
         sf::Event event;
+        // TODO pass events down to game
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 break;
@@ -93,10 +94,15 @@ int main (int argc, char ** argv) {
                 RenderUtils::resize(event.size.width, event.size.height);
                 WIDTH = event.size.width;
                 HEIGHT = event.size.height;
-            } else if (event.type == sf::Event::KeyPressed) {
+            }
+            else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape) { // ESC - closes program
                     exit(0);
                 }
+                game.handleSFEvent(event);
+            }
+            else {
+                game.handleSFEvent(event);
             }
         }
 

@@ -26,8 +26,10 @@ Component * Entity::getComponent(ComponentType typeName) {
     return components[typeName];
 }
 
+Entity::Entity(EventSystem * es) : eventSystem(es) {}
+
 void Entity::update() {
-    for_each(components.begin(), components.end(), [](std::pair<ComponentType, Component *> pair) {
+    for (auto pair : components) {
         pair.second->update();
-    });
+    };
 }

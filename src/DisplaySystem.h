@@ -1,5 +1,5 @@
-#ifndef __DISPLAYOBJECT_H__
-#define __DISPLAYOBJECT_H__
+#ifndef __DISPLAYSYSTEM_H__
+#define __DISPLAYSYSTEM_H__
 
 #include <vector>
 #include <SFML/System.hpp>
@@ -8,10 +8,10 @@
 
 class DisplayObject {
     public:
-
         DisplayObject * parent;
 
         Entity * entity;
+        DisplayObject * stage;
 
         std::vector<DisplayObject*> children;
         DisplayObject * addChild (DisplayObject*);

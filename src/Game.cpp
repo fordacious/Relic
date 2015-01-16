@@ -8,6 +8,7 @@
 #include "RenderUtils.h"
 #include "PhysicsComponent.h"
 #include "DisplaySystem.h"
+#include "EventSystem.h"
 
 #define NUM_ENTITIES 1000
 
@@ -24,12 +25,15 @@ Game::Game () {
     // each update, incrememnt 'updatesToPerform' on each thread. Threads then perform that
     // amount of updates next frame.
 
-    player = Player();
-
     stage = new Stage();
+    stage->stage = stage;
+
+    eventSystem = new EventSystem();
+
+    player = new Player(eventSystem);
 
     for (int i = 0 ; i < NUM_ENTITIES; i ++) {
-        Entity * d = new Entity();
+        Entity * d = new Entity(eventSystem);
 
         auto pc = (PhysicsComponent *)d->addComponent(GET_COMPONENT_TYPE(PhysicsComponent), new PhysicsComponent());
 
@@ -44,6 +48,12 @@ Game::Game () {
 
         entitiesTest.push_back(d);
     }
+
+    auto tr = new TestRenderer();
+    stage->addChild(tr)->entity = player;
+    auto pc = (PhysicsComponent *)player->getComponent(GET_COMPONENT_TYPE(PhysicsComponent));
+    pc->mass = 20;
+    tr->colour.r = 255;
 }
 
 void Game::render (RenderUtils::DisplayState ds) {
@@ -53,10 +63,20 @@ void Game::render (RenderUtils::DisplayState ds) {
 }
 
 void Game::update (int currentFrame, sf::Vector2<double> mouse) {
-    for_each (entitiesTest.begin(), entitiesTest.end(), [mouse] (Entity * curEntity) {
+    for (auto curEntity : entitiesTest) {
         auto physComponent = (PhysicsComponent *)curEntity->getComponent(GET_COMPONENT_TYPE(PhysicsComponent));
         physComponent->accel.x = (mouse.x - curEntity->transform.pos.x) / 5000 * 5 * physComponent->mass;
         physComponent->accel.y = (mouse.y - curEntity->transform.pos.y) / 5000 * 5 * physComponent->mass;
         curEntity->update();
-    });
+    };
+}
+
+void Game::handleSFEvent(sf::Event event) {
+    // TODO convert to relic event and dispatch
+    if (event.type == sf::Event::KeyPressed) {
+        KeyboardEvent e;
+        e.keyCode = event.key.code;
+        eventSystem->dispatchEvent(EVENT(KeyboardEvent), (Event *) &e);
+        std::cout << "B";
+    }
 }

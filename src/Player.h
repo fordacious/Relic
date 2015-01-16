@@ -5,10 +5,9 @@
 
 class Player : public Entity {
     public:
-        Player();
-        double size;
-    protected:
-        void update();
+        Player(EventSystem *);
+    private:
+        void handleKeyboardInput(KeyboardEvent *);
 };
 
 #endif
