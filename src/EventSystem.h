@@ -29,6 +29,9 @@ class KeyboardEvent : public Event {
         int keyCode;
 };
 
+class KeyDownEvent : public KeyboardEvent {};
+class KeyUpEvent : public KeyboardEvent {};
+
 typedef std::function<void(Event *)> EventCallback;
 
 class EventDispatcher {

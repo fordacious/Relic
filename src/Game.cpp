@@ -69,14 +69,20 @@ void Game::update (int currentFrame, sf::Vector2<double> mouse) {
         physComponent->accel.y = (mouse.y - curEntity->transform.pos.y) / 5000 * 5 * physComponent->mass;
         curEntity->update();
     };
+
+    player->update();
 }
 
 void Game::handleSFEvent(sf::Event event) {
     // TODO convert to relic event and dispatch
     if (event.type == sf::Event::KeyPressed) {
-        KeyboardEvent e;
+        KeyDownEvent e;
         e.keyCode = event.key.code;
-        eventSystem->dispatchEvent(EVENT(KeyboardEvent), (Event *) &e);
-        std::cout << "B";
+        eventSystem->dispatchEvent(EVENT(KeyDownEvent), (Event *)&e);
+    }
+    else if (event.type == sf::Event::KeyReleased) {
+        KeyUpEvent e;
+        e.keyCode = event.key.code;
+        eventSystem->dispatchEvent(EVENT(KeyUpEvent), (Event *)&e);
     }
 }

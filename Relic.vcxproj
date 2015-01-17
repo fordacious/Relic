@@ -148,6 +148,8 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\PhysicsComponent.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\PlayerComponent.cpp" />
+    <ClCompile Include="src\PlayerInputComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ComponentSystem.h" />
@@ -157,6 +159,8 @@
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\PhysicsComponent.h" />
     <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\PlayerComponent.h" />
+    <ClInclude Include="src\PlayerInputComponent.h" />
     <ClInclude Include="src\RenderUtils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

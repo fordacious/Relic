@@ -6,8 +6,6 @@
 class Player : public Entity {
     public:
         Player(EventSystem *);
-    private:
-        void handleKeyboardInput(KeyboardEvent *);
 };
 
 #endif

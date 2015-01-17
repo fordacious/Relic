@@ -67,6 +67,7 @@ int main (int argc, char ** argv) {
     sf::Window window(sf::VideoMode(WIDTH, HEIGHT), "Relic", sf::Style::Default, sf::ContextSettings(32));
     window.setVerticalSyncEnabled(false);
     window.setMouseCursorVisible(false);
+    window.setKeyRepeatEnabled(false);
 
     RenderUtils::init(WIDTH, HEIGHT);
 

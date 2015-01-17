@@ -1,3 +1,4 @@
+#include <iostream>
 #include <algorithm>
 
 #include "ComponentSystem.h"

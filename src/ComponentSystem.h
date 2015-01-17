@@ -8,8 +8,9 @@
 
 #include "EventSystem.h"
 
-#define GET_COMPONENT_TYPE(X) #X
-#define ADD_COMPONENT(X, ...) addComponent(GET_COMPONENT_TYPE(X), new X(__VA_ARGS__));
+#define GET_COMPONENT_TYPE(TYPE) #TYPE
+#define ADD_COMPONENT(TYPE, ...) addComponent(#TYPE, new TYPE(__VA_ARGS__))
+#define GET_COMPONENT(ENTITY, TYPE) ((TYPE *)ENTITY->getComponent(#TYPE))
 
 class Entity;
 
