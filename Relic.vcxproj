@@ -64,12 +64,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -140,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ClassIdSystem.cpp" />
     <ClCompile Include="src\ComponentSystem.cpp" />
     <ClCompile Include="src\DisplaySystem.cpp" />
     <ClCompile Include="src\Editor.cpp" />
@@ -152,6 +155,7 @@
     <ClCompile Include="src\PlayerInputComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ClassIdSystem.h" />
     <ClInclude Include="src\ComponentSystem.h" />
     <ClInclude Include="src\DisplaySystem.h" />
     <ClInclude Include="src\Editor.h" />

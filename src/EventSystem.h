@@ -8,29 +8,25 @@
 
 #include <SFML/Window.hpp>
 
-//#include "ComponentSystem.h"
+#define EVENT(TYPE) EventIdSystem::getId<TYPE>()
 
-#define EVENT(X) #X
+// generates a unique id for each event
+namespace EventIdSystem {
+    #include "ClassIdSystem.h"
+}
 
-typedef std::string EventType;
+typedef int EventType;
 
-//enum EventType {
-//    TestEvent
-//};
-
-class Event {
-    //Entity * target;
-};
+struct Event {};
 
 typedef sf::Keyboard::Key KeyCode;
 
-class KeyboardEvent : public Event {
-    public:
-        int keyCode;
+struct KeyboardEvent : public Event {
+    int keyCode;
 };
 
-class KeyDownEvent : public KeyboardEvent {};
-class KeyUpEvent : public KeyboardEvent {};
+struct KeyDownEvent : public KeyboardEvent {};
+struct KeyUpEvent : public KeyboardEvent {};
 
 typedef std::function<void(Event *)> EventCallback;
 
@@ -40,6 +36,7 @@ class EventDispatcher {
         void off(EventType);
         void dispatchEvent(EventType, Event *);
     private:
+        // TODO very inefficient, replace with component enum as index and lookup an array
         std::map<EventType, EventCallback> eventMap;
 };
 

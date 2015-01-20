@@ -14,7 +14,7 @@
 
 class TestRenderer : public DisplayObject {
     void render(RenderUtils::DisplayState ds) {
-        auto pc = (PhysicsComponent *)entity->getComponent(GET_COMPONENT_TYPE(PhysicsComponent));
+        auto pc = GET_COMPONENT(entity, PhysicsComponent);
         RenderUtils::renderSquare(entity->transform.pos, pc->mass / ds.width, pc->mass / ds.height, colour);
     }
 };
@@ -51,7 +51,7 @@ Game::Game () {
 
     auto tr = new TestRenderer();
     stage->addChild(tr)->entity = player;
-    auto pc = (PhysicsComponent *)player->getComponent(GET_COMPONENT_TYPE(PhysicsComponent));
+    auto pc = GET_COMPONENT(player, PhysicsComponent);
     pc->mass = 20;
     tr->colour.r = 255;
 }
@@ -64,7 +64,7 @@ void Game::render (RenderUtils::DisplayState ds) {
 
 void Game::update (int currentFrame, sf::Vector2<double> mouse) {
     for (auto curEntity : entitiesTest) {
-        auto physComponent = (PhysicsComponent *)curEntity->getComponent(GET_COMPONENT_TYPE(PhysicsComponent));
+        auto physComponent = GET_COMPONENT(curEntity, PhysicsComponent);
         physComponent->accel.x = (mouse.x - curEntity->transform.pos.x) / 5000 * 5 * physComponent->mass;
         physComponent->accel.y = (mouse.y - curEntity->transform.pos.y) / 5000 * 5 * physComponent->mass;
         curEntity->update();

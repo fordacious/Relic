@@ -4,10 +4,10 @@
 #include "EventSystem.h"
 
 PlayerInputComponent::PlayerInputComponent(EventSystem * es) : Component() {
-    es->on(EVENT(KeyDownEvent), [&](Event * e) {
+    es->on(EVENT(KeyDownEvent), [this](Event * e) {
         handleKeyDown((KeyDownEvent *) e);
     });
-    es->on(EVENT(KeyUpEvent), [&](Event * e) {
+    es->on(EVENT(KeyUpEvent), [this](Event * e) {
         handleKeyUp((KeyUpEvent *) e);
     });
 }

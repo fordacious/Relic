@@ -1,5 +1,9 @@
 #include "EventSystem.h"
 
+namespace EventIdSystem {
+    #include "ClassIdSystem.cpp"
+}
+
 void EventDispatcher::on(EventType type, EventCallback callback){
     eventMap[type] = callback;
 }
