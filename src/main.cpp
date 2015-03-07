@@ -26,11 +26,10 @@ sf::Vector2<double> mousePos = sf::Vector2<double>(0,0);
 // Window stuff
 double FPS = 60;
 double MICROSECONDS_PER_FRAME = 1000000/FPS;
-double WIDTH = 1280;
-double HEIGHT = 720;
+double Width = 640;
+double Height = 480;
 
 int currentFrame = 0;
-
 
 Game * currentGame;
 
@@ -38,7 +37,7 @@ void render (Game * game) {
     glLoadIdentity();
     //glUseProgram(0);
 
-    game->render(RenderUtils::DisplayState(WIDTH, HEIGHT, currentFrame, mousePos));
+    game->render(RenderUtils::DisplayState(Width, Height, currentFrame, mousePos));
 }
 
 void renderingThread(sf::Window * window) {
@@ -65,14 +64,18 @@ void renderingThread(sf::Window * window) {
 
 int main (int argc, char ** argv) {
 
-    std::cout << "Relic C++ Version" << std::endl;
+    std::cout << "Relic C++ Version v0.0.1" << std::endl;
 
-    sf::Window window(sf::VideoMode(WIDTH, HEIGHT), "Relic", sf::Style::Default, sf::ContextSettings(32));
+    sf::VideoMode DesktopMode = sf::VideoMode::getDesktopMode();
+    Width = DesktopMode.width;
+    Height = DesktopMode.height;
+    sf::Window window(sf::VideoMode(Width, Height), "Relic", sf::Style::Fullscreen, sf::ContextSettings(32));
+
     window.setVerticalSyncEnabled(false);
     window.setMouseCursorVisible(false);
     window.setKeyRepeatEnabled(false);
 
-    RenderUtils::init(WIDTH, HEIGHT);
+    RenderUtils::init(Width, Height);
 
     Game game = Game();
     currentGame = &game;
@@ -85,7 +88,7 @@ int main (int argc, char ** argv) {
 
     srand(time(NULL));
 
-    //sf::Mouse::setPosition(sf::Vector2i(WIDTH / 2, HEIGHT / 2), window);
+    //sf::Mouse::setPosition(sf::Vector2i(Width / 2, Height / 2), window);
 
     while (true) {
         clock.restart();
@@ -96,10 +99,9 @@ int main (int argc, char ** argv) {
                 break;
             } else if (event.type == sf::Event::Resized) {
                 RenderUtils::resize(event.size.width, event.size.height);
-                WIDTH = event.size.width;
-                HEIGHT = event.size.height;
-            }
-            else if (event.type == sf::Event::KeyPressed) {
+                Width = event.size.width;
+                Height = event.size.height;
+            } else if (event.type == sf::Event::KeyPressed) {
                 if (event.key.code == sf::Keyboard::Escape) { // ESC - closes program
                     exit(0);
                 }
@@ -109,17 +111,14 @@ int main (int argc, char ** argv) {
                 game.handleSFEvent(event);
             }
         }
-/*
-    std::cout << mousePos.x << "\n";
-    std::cout << mousePos.y << "\n";
-*/
+
         game.update(currentFrame, mousePos);
  
         currentFrame += 1;
 
-        mousePos.x += (sf::Mouse::getPosition(window).x / WIDTH  - 0.5);
-        mousePos.y -= (sf::Mouse::getPosition(window).y / HEIGHT - 0.5);
-        sf::Mouse::setPosition(sf::Vector2i(WIDTH / 2, HEIGHT / 2), window);
+        mousePos.x += (sf::Mouse::getPosition(window).x / Width  - 0.5);
+        mousePos.y -= (sf::Mouse::getPosition(window).y / Height - 0.5);
+        sf::Mouse::setPosition(sf::Vector2i(Width / 2, Height / 2), window);
 
         double d = MICROSECONDS_PER_FRAME - clock.restart().asMicroseconds();
 

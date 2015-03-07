@@ -13,6 +13,7 @@
 #define GET_COMPONENT(ENTITY, TYPE) ((TYPE *)ENTITY->getComponent(ComponentIdSystem::getId<TYPE>()))
 
 // generates a unique id for each component
+// TODO remove this and register each component, for compile time array allocation
 namespace ComponentIdSystem {
     #include "ClassIdSystem.h"
 }
@@ -56,6 +57,7 @@ class Entity : public EventDispatcher {
         virtual void update();
 
     private:
+        // TODO will become array
         std::map<int, Component *> components;
 };
 

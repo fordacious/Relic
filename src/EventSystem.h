@@ -24,11 +24,11 @@ typedef sf::Keyboard::Key KeyCode;
 typedef sf::Mouse::Button MouseCode;
 
 struct KeyboardEvent : public Event {
-    int keyCode;
+    KeyCode keyCode;
 };
 
 struct MouseEvent : public Event {
-    int mouseCode;
+    MouseCode mouseCode;
 };
 
 struct KeyDownEvent : public KeyboardEvent {};
