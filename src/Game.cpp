@@ -31,7 +31,7 @@ Game::Game () {
     eventSystem = new EventSystem();
 
     player = new Player(eventSystem);
-
+/*
     for (int i = 0 ; i < NUM_ENTITIES; i ++) {
         Entity * d = new Entity(eventSystem);
 
@@ -48,7 +48,7 @@ Game::Game () {
 
         entitiesTest.push_back(d);
     }
-
+*/
     auto tr = new TestRenderer();
     stage->addChild(tr)->entity = player;
     auto pc = GET_COMPONENT(player, PhysicsComponent);
@@ -84,5 +84,15 @@ void Game::handleSFEvent(sf::Event event) {
         KeyUpEvent e;
         e.keyCode = event.key.code;
         eventSystem->dispatchEvent(EVENT(KeyUpEvent), (Event *)&e);
+    }
+    else if (event.type == sf::Event::MouseButtonPressed){
+        MouseDownEvent e;
+        e.mouseCode = event.mouseButton.button;
+        eventSystem->dispatchEvent(EVENT(MouseDownEvent), (Event *)&e);
+    }
+    else if (event.type == sf::Event::MouseButtonReleased){
+        MouseUpEvent e;
+        e.mouseCode = event.mouseButton.button;
+        eventSystem->dispatchEvent(EVENT(MouseUpEvent), (Event *)&e);
     }
 }
