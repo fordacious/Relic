@@ -10,6 +10,7 @@
 
 namespace RenderUtils {
 
+
     struct Colour {
         int r; int g; int b;
         Colour (int r, int g, int b):r(r),g(g),b(b) {}
@@ -44,6 +45,7 @@ namespace RenderUtils {
             glVertex3f(pos.x-width,pos.y+height,0);
         glEnd();
     }
+
 }
 
 #endif

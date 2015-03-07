@@ -1,0 +1,24 @@
+just to list for now
+
+might make a documentation html
+
+COMPONENTS
+Physics
+Ship
+Player
+PlayerInput
+Collision
+
+EVENTS
+Collision
+Keyboard 
+Game
+
+SHIP PARTS
+Booster
+Laser
+Railgun
+Flak
+Drone
+Wave/Plasma
+Augument

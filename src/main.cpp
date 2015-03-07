@@ -19,15 +19,18 @@
 #include "Game.h"
 #include "RenderUtils.h"
 
+// oh yeah we're goin global
+#include "ArtificialMouse.h"
+sf::Vector2<double> mousePos = sf::Vector2<double>(0,0);
+
 // Window stuff
 double FPS = 60;
 double MICROSECONDS_PER_FRAME = 1000000/FPS;
-double WIDTH = 1024;
-double HEIGHT = 768;
+double WIDTH = 1280;
+double HEIGHT = 720;
 
 int currentFrame = 0;
 
-struct sf::Vector2<double> mousePos = sf::Vector2<double>(0,0);
 
 Game * currentGame;
 
@@ -82,7 +85,7 @@ int main (int argc, char ** argv) {
 
     srand(time(NULL));
 
-    sf::Mouse::setPosition(sf::Vector2i(WIDTH / 2, HEIGHT / 2), window);
+    //sf::Mouse::setPosition(sf::Vector2i(WIDTH / 2, HEIGHT / 2), window);
 
     while (true) {
         clock.restart();
@@ -106,7 +109,10 @@ int main (int argc, char ** argv) {
                 game.handleSFEvent(event);
             }
         }
-
+/*
+    std::cout << mousePos.x << "\n";
+    std::cout << mousePos.y << "\n";
+*/
         game.update(currentFrame, mousePos);
  
         currentFrame += 1;

@@ -21,12 +21,20 @@ struct Event {};
 
 typedef sf::Keyboard::Key KeyCode;
 
+typedef sf::Mouse::Button MouseCode;
+
 struct KeyboardEvent : public Event {
     int keyCode;
 };
 
+struct MouseEvent : public Event {
+    int mouseCode;
+};
+
 struct KeyDownEvent : public KeyboardEvent {};
 struct KeyUpEvent : public KeyboardEvent {};
+struct MouseDownEvent : public MouseEvent {};
+struct MouseUpEvent : public MouseEvent {};
 
 typedef std::function<void(Event *)> EventCallback;
 
