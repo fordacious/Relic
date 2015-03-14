@@ -1,2 +1,6 @@
 .DS_Store
-bin/*
+bin/
+x64/
+x32/
+Debug/
+Release/
