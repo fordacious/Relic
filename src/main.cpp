@@ -3,7 +3,7 @@
 #include <string>
 #include <map>
 
-#include <time.h>
+#include <ctime>
 #include <stdlib.h>
 
 #include <SFML/Window.hpp>
@@ -24,8 +24,8 @@
 sf::Vector2<double> mousePos = sf::Vector2<double>(0,0);
 
 // Window stuff
-double FPS = 60;
-double MICROSECONDS_PER_FRAME = 1000000/FPS;
+constexpr double FPS = 60;
+constexpr double MICROSECONDS_PER_FRAME = 1000000/FPS;
 double Width = 640;
 double Height = 480;
 
